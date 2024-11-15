@@ -1,0 +1,117 @@
+<odoo>
+    <!--    Form View -->
+    <record id="view_todo_form" model="ir.ui.view">
+        <field name="name">todo_management.form</field>
+        <field name="model">todo.management</field>
+        <field name="arch" type="xml">
+            <form string="To-Do">
+                <sheet>
+                    <!--  <header> allows you to add buttons, display information,at the top of the form view.-->
+                    <header>
+                        <!--can i use statusbar_visible="value you want to show to the user" -->
+                        <field name="status" widget="statusbar"  options="{'clickable':1}"/>
+                    </header>
+                    <group>
+                        <group>
+                            <field name="task_name"/>
+                            <field name="description"/>
+                            <field name="estimated_time"/>
+                        </group>
+                        <group>
+                            <field name="due_date" />
+                            <field name="assign_to" />
+                            <field name="active" invisible="1"/>
+                            <field name="is_late" invisible="1"/>
+
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Timesheet">
+                            <field name="line_ids" >
+                                <tree editable="bottom">
+                                    <field name="num" />
+                                    <field name="date" />
+                                    <field name="description" />
+                                    <field name="time" />
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+
+                <!-- Chatter component -->
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" groups="base.group_user"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+    <!--    Tree View -->
+    <record id="view_todo_tree" model="ir.ui.view">
+        <field name="name">todo_management.tree</field>
+        <field name="model">todo.management</field>
+        <field name="arch" type="xml">
+            <tree string="To-Do" multi_edit="1" class="header_custom" decoration-danger="(is_late)">
+                <field name="task_name"/>
+                <field name="description"/>
+                <field name="due_date" />
+                <field name="assign_to" />
+                <field name="estimated_time" />
+                <field name="is_late" optional="hide"/>
+            </tree>
+        </field>
+    </record>
+
+    <!--    Search View -->
+    <record id="view_todo_search" model="ir.ui.view">
+        <field name="name">todo_management.search</field>
+        <field name="model">todo.management</field>
+        <field name="arch" type="xml">
+            <search string="To-Do">
+                <field name="task_name"/>
+                <field name="assign_to"/>
+
+                <filter name="is_new" string="New" domain="[('status','=','new')]"/>
+                <filter name="is_inprogress" string="In progress" domain="[('status','=','in progress')]"/>
+                <filter name="is_completed" string="Completed" domain="[('status','=','completed')]"/>
+                <filter name="group_assign" string="Assign To" context="{'group_by':'assign_to'}"/>
+                <filter name="group_status" string="Status" context="{'group_by':'status'}"/>
+                <filter name="group_date" string="Due Date" context="{'group_by':'due_date'}"/>
+            </search>
+        </field>
+    </record>
+
+
+    <record id="action_todo_management" model="ir.actions.act_window">
+        <field name="name">Todo</field>
+        <field name="res_model">todo.management</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_ids" eval="[Command.clear(),
+                          (0,0,{'view_mode':'tree' , 'view_id': ref('view_todo_tree')}),
+                          (0,0,{'view_mode':'form', 'view_id': ref('view_todo_form')})]"/>
+
+    </record>
+    <!-- record for Server Action -->
+    <record id="todo_server_action" model="ir.actions.server">
+        <field name="name">Close</field>
+        <field name="model_id" ref="model_todo_management" />
+        <field name="binding_model_id" ref="model_todo_management" />
+        <field name="state">code</field>
+        <field name="code">
+            action = records.action_close_todo()
+        </field>
+    </record>
+
+    <!-- record for Cron Job Action -->
+       <record id="check_due_date_cron" model="ir.cron">
+        <field name="name">Base: Check the due date</field>
+        <field name="model_id" ref="model_todo_management"/>
+        <field name="state">code</field>
+        <field name="code">model.check_due_date_if_late()</field>
+        <field name='interval_number'>1</field>
+        <field name='interval_type'>days</field>
+        <field name="numbercall">-1</field>
+    </record>
+
+</odoo>

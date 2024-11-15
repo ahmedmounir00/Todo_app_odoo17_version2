@@ -1,0 +1,23 @@
+/* custom_treeview.css */
+/* Remember that : thead => table header |  tr => table row | th => table header cell */
+.header_custom table thead tr th {
+    background-color: #9999ff!important;
+    color: white !important;
+}
+.doctors_header table thead tr th {
+    background-color: #9999ff!important;
+    color: white !important;
+}
+/* we but nth-child(2) => 2 because the checkbox is the first element */
+.header_custom table thead tr th:nth-child(2){
+    width:250px !important;
+}
+.header_custom table tbody tr td{
+    background-color: #cccce6 !important;
+    color:black ;
+}
+.doctors_header table tbody tr td{
+    background-color: #cccce6 !important;
+    color:black !important;
+}
+

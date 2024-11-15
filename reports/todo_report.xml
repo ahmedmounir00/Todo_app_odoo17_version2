@@ -1,0 +1,92 @@
+<odoo>
+    <record id="todo_report" model="ir.actions.report">
+        <field name="name">Task Report</field>
+        <field name="model">todo.management</field>
+        <field name="report_type">qweb-html</field>
+        <field name="binding_model_id" ref="model_todo_management"/>
+        <field name="binding_type">report</field>
+        <field name="report_name">todo_management.todo_report_template</field>
+    </record>
+
+    <template id="todo_report_template">
+        <t t-call="web.html_container">
+            <t t-call="web.basic_layout">
+                <t t-foreach="docs" t-as="o">
+                    <style>
+                        *{box-sizing: border-box;}
+                        body{background-color:#eee; }
+                        .bold {font-weight:bold;}
+                        .des{margin-top:10px; margin-bottom:10px;}
+                        span{font-weight:bold;}
+                        .parent{
+                            width:98%; height:50%; background-color:white;border:3px solid black; padding:30px;
+                            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+                        }
+                        .header{width:25%; background-color:white; border:3px solid black; padding:30px; margin-top:20px;}
+                        .header-container{width:100%; padding-bottom:20px; border-bottom:3px solid #17a2b8;}
+                        table{width:100%; border:2px solid black; font-weight:bold; text-align:center;}
+                        thead th{border:2px solid black;}
+                        .footer{width:98%; background-color:#eee; border-top:3px solid #17a2b8; padding:15px; flex-wrap:wrap;
+                            position: absolute; bottom:0; margin-bottom:20px; display:flex; justify-content: center;}
+                        .mid{width:100%; display:flex; justify-content: center; margin-bottom:10px;}
+                        .inner{border:2px solid black; padding:8px; font-weight:bold; background-color:white;}
+                        .last{width:100%; display:flex; justify-content: flex-end;}
+                        .last-inner{background-color:white; border:2px solid black; padding:8px; font-weight:bold; text-transform: capitalize;}
+                        tbody tr td {border:2px solid black;}
+                        tfoot tr td {border:2px solid black;}
+
+                    </style>
+                    <div class="header-container">
+                        <div class="header">
+                            <div class="bold">Company Logo</div>
+                            <div class="bold">Address</div>
+                            <div class="bold">Phone</div>
+                        </div>
+                    </div>
+                    <div class="parent">
+                        <div>
+                            <div><span>Task : </span> <t t-esc="o.task_name"></t></div>
+                            <div><span>Due Date : </span> <t t-esc="o.due_date"></t></div>
+                            <div><span>Assign To : </span> <t t-esc="o.assign_to.name"></t></div>
+                            <div><span>Estimated Time : </span> <t t-esc="o.estimated_time"></t> H</div>
+                        </div>
+                        <div class="des"><div style="margin-bottom:0;"><span>Description : </span></div> <t t-esc="o.description"></t></div>
+                        <table>
+                            <thead>
+                                <tr><th colspan="4">Timesheet</th></tr>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Date</th>
+                                    <th>Description</th>
+                                    <th>Time</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <t t-foreach="docs.line_ids" t-as="line">
+                                    <tr style="border:2px solid black;">
+                                        <td><t t-esc="line.num"></t></td>
+                                        <td><t t-esc="line.date"></t></td>
+                                        <td><t t-esc="line.description"></t></td>
+                                        <td><t t-esc="line.time"></t> H</td>
+                                    </tr>
+                                </t>
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <td colspan="3">Total Time</td>
+                                    <td ><t t-esc="o.total_time"></t> H</td>
+
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                    <div class="footer">
+                        <div class="mid"><div class="inner">Company email , Phone , Register Number</div></div>
+                        <div class="last"><div class="last-inner">pagination</div></div>
+
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+</odoo>

@@ -1,0 +1,19 @@
+<odoo>
+    <!-- Root Menu -->
+    <menuitem id="menu_todo_root"
+              name="To-Do"
+              sequence="1"
+              web_icon="todo_management,static/description/icon.png"
+    />
+    <!-- Submenu: To-Do in Nav bar-->
+    <menuitem id="menu_todo"
+              name="To-Do"
+              parent="menu_todo_root"
+    />
+    <!-- Submenu: All Tasks that slide from navbar-->
+    <menuitem id="menu_alltasks"
+              name="All Tasks"
+              parent="menu_todo"
+              action="action_todo_management"
+    />
+</odoo>
